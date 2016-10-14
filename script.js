@@ -9,13 +9,14 @@ var buttons = document.getElementsByTagName('button');
 
   }
 
-
+var rectangles = []
 var colour = "black";
-var lineWidth = 1
+var lineWidth = 5;
 var downX = 0;
 var downY = 0;
 var upX = 0;
 var upY = 0;
+var fill = false;
 
 function clickCanvas(event) {
   downX = event.clientX;
@@ -36,6 +37,9 @@ function getButton(evt) {
   } else if (evt.target.value === "Thin") {
     context.lineWidth = "1";
     console.log("thinLine");
+  } else if (evt.target.value === "Clear") {
+     context.clearRect(0,0,800,800);
+     rectangles = [];
   }
 }
 
@@ -47,11 +51,38 @@ function releaseCanvas(event) {
   console.log("down at " + downX + ", " + downY);
   console.log("up at " + downX + ", " + downY);
   console.log("dx: " + dx + ", dy: " + dy);
+  rectangles.push(new Rectangle(downX -362- dx, downY - 50 - dy, dx, dy, this.colour, this.lineWidth));
 
-  context.beginPath;
-  context.lineWidth = this.lineWidth;
-  context.rect(downX -362- dx, downY - 50 - (dy), dx, dy);
-  context.stroke();
-  
-  
+  drawRects();
+}
+
+Rectangle.prototype.update = function () {
+  drawRect(this);
+}
+
+function drawRects() {
+
+  for (var i = 0; i < rectangles.length; i++) {
+    var Rect = rectangles[i];
+    
+      drawRect(Rect);
+  }
+}
+
+function drawRect(Rect) {
+      context.beginPath();
+      context.lineWidth = 10;
+      context.strokeStyle = "green";
+      context.rect(Rect.x, Rect.y, Rect.width, Rect.height);
+      context.stroke;
+      console.log("draw rect");
+} 
+
+function Rectangle(X, Y, Width, Height, Colour, lineWidth){
+  this.x = X;
+  this.y = Y;
+  this.width = Width;
+  this.height = Height;
+  this.colour = Colour;
+  this.lineWidth = lineWidth;
 }
